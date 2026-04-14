@@ -5,6 +5,7 @@
 - Hugo César Alegría Gómez
 - Nicol Romina Quispe Quijo
 - Robert Andi Balderrama Quispe
+- José David Mamani León
 
 ## Descripción
 Proyecto de Machine Learning que incluye modelos de regresión y clasificación.
