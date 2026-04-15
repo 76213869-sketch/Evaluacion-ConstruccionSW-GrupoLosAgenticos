@@ -45,21 +45,14 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
 model = LinearRegression()
 model.fit(X_train, y_train)
 
-print('
---- Modelo de Regresión Lineal Múltiple (5 variables) ---')
+print('')
+print('--- Modelo de Regresión Lineal Múltiple (5 variables) ---')
 print('Modelo entrenado.')
 print(f'Coeficientes del modelo: {model.coef_}')
 print(f'Intercepto del modelo: {model.intercept_}')
 
-# Evaluación del Modelo 1
-y_pred = model.predict(X_test)
-
-mse = mean_squared_error(y_test, y_pred)
-mae = mean_absolute_error(y_test, y_pred)
-r2 = r2_score(y_test, y_pred)
-
-print(f'
-Mean Squared Error (MSE): {mse:.2f}')
+print('')
+print(f'Mean Squared Error (MSE): {mse:.2f}')
 print(f'Mean Absolute Error (MAE): {mae:.2f}')
 print(f'R-squared (R2): {r2:.2f}')
 
@@ -106,32 +99,25 @@ X_train_new, X_test_new, y_train_new, y_test_new = train_test_split(X_new, y_new
 model_new = LinearRegression()
 model_new.fit(X_train_new, y_train_new)
 
-print('
---- Nuevo Modelo de Regresión Lineal Múltiple (3 variables) ---')
+print('')
+print('--- Nuevo Modelo de Regresión Lineal Múltiple (3 variables) ---')
 print('Modelo entrenado.')
 print(f'Coeficientes del nuevo modelo: {model_new.coef_}')
 print(f'Intercepto del nuevo modelo: {model_new.intercept_}')
 
-# Evaluación y Comparación del Nuevo Modelo (3 variables)
-y_pred_new = model_new.predict(X_test_new)
-
-mse_new = mean_squared_error(y_test_new, y_pred_new)
-mae_new = mean_absolute_error(y_test_new, y_pred_new)
-r2_new = r2_score(y_test_new, y_pred_new)
-
-print(f'
-Mean Squared Error (MSE): {mse_new:.2f}')
+print('')
+print(f'Mean Squared Error (MSE): {mse_new:.2f}')
 print(f'Mean Absolute Error (MAE): {mae_new:.2f}')
 print(f'R-squared (R2): {r2_new:.2f}')
 
-print('
---- Comparación de Coeficientes ---')
+print('')
+print('--- Comparación de Coeficientes ---')
 print('Modelo Original (5 variables):')
 for feature, coef in zip(X.columns, model.coef_):
     print(f'  {feature}: {coef:.2f}')
 
-print('
-Nuevo Modelo (3 variables):')
+print('')
+print('Nuevo Modelo (3 variables):')
 for feature, coef in zip(X_new.columns, model_new.coef_):
     print(f'  {feature}: {coef:.2f}')
 
