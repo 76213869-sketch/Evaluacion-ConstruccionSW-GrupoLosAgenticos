@@ -1,154 +1,73 @@
 import pandas as pd
 import numpy as np
-from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LinearRegression
-from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
 import matplotlib.pyplot as plt
-import seaborn as sns
-from mpl_toolkits.mplot3d import Axes3D
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
 
-# --- Carga de datos ---
+# 1. Cargar los datos
+# Se cambia la ruta absoluta por una relativa, ya que el archivo está en el directorio de trabajo actual.
+df = pd.read_csv('House_price.csv') 
 
-# Asegúrate de que el archivo House_price.csv esté en el directorio correcto o ajusta la ruta
-try:
-    df_house = pd.read_csv('House_price.csv')
-    print('Archivo House_price.csv cargado exitosamente.')
-except FileNotFoundError:
-    print('Error: El archivo House_price.csv no se encuentra en el directorio actual.')
-    print('Asegúrate de que el archivo esté en /content/Evaluacion-ConstruccionSW-GrupoLosAgenticos/')
-    df_house = pd.read_csv('/content/Evaluacion-ConstruccionSW-GrupoLosAgenticos/House_price.csv')
-    print('Se cargó el archivo usando la ruta completa.')
+# Definir la columna objetivo
+target_col = 'Price'
 
-# df_house.head() # Descomentar para ver las primeras filas (interactivo)
-# df_house.info() # Descomentar para ver la información general (interactivo)
-# df_house.describe() # Descomentar para ver estadísticas descriptivas (interactivo)
+# Para un gráfico 3D, DEBEMOS usar exactamente 2 variables independientes
+# (X, Y serán estas variables, y Z será el Precio)
+independent_cols_3d = ['Avg. Area Income', 'House Age']
 
-# --- Modelo de Regresión Lineal Múltiple (5 variables) ---
+print(f"Variables seleccionadas para el modelo 3D: {independent_cols_3d}")
 
-# Preparación de los datos para el Modelo 1 (5 variables)
-numeric_cols = df_house.select_dtypes(include=np.number).columns.tolist()
-if 'Price' in numeric_cols:
-    numeric_cols.remove('Price')
+X_3d = df[independent_cols_3d]
+y = df[target_col]
 
-X = df_house[numeric_cols]
-y = df_house['Price']
+# Dividir los datos (usamos menos datos para que el gráfico 3D no se sature de puntos)
+X_train, X_test, y_train, y_test = train_test_split(X_3d, y, test_size=0.1, random_state=42)
 
-# Manejar valores nulos (si los hubiera) imputando con la media
-for col in X.columns:
-    if X[col].isnull().any():
-        X[col].fillna(X[col].mean(), inplace=True)
+# 2. Entrenar el modelo con 2 variables
+model_3d = LinearRegression()
+model_3d.fit(X_train, y_train)
 
-# División de los datos en conjuntos de entrenamiento y prueba para el Modelo 1
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-
-# Construcción y entrenamiento del Modelo 1
-model = LinearRegression()
-model.fit(X_train, y_train)
-
-print('')
-print('--- Modelo de Regresión Lineal Múltiple (5 variables) ---')
-print('Modelo entrenado.')
-print(f'Coeficientes del modelo: {model.coef_}')
-print(f'Intercepto del modelo: {model.intercept_}')
-
-# Evaluación del Modelo 1
-y_pred = model.predict(X_test)
-
-mse = mean_squared_error(y_test, y_pred)
-mae = mean_absolute_error(y_test, y_pred)
-r2 = r2_score(y_test, y_pred)
-
-print('')
-print(f'Mean Squared Error (MSE): {mse:.2f}')
-print(f'Mean Absolute Error (MAE): {mae:.2f}')
-print(f'R-squared (R2): {r2:.2f}')
-
-# Visualización de Predicciones vs. Valores Reales (Modelo 1)
-plt.figure(figsize=(10, 6))
-sns.scatterplot(x=y_test, y=y_pred)
-plt.xlabel('Precios Reales')
-plt.ylabel('Precios Predichos')
-plt.title('Precios Reales vs. Precios Predichos (Modelo 5 variables)')
-plt.plot([y_test.min(), y_test.max()], [y_test.min(), y_test.max()], 'r--') # Línea de referencia y=x
-plt.grid(True)
-plt.savefig('/content/plot_model_5_variables_predictions.png')
-plt.show()
-
-# Residuos del Modelo 1
-residuals = y_test - y_pred
-
-plt.figure(figsize=(10, 6))
-sns.histplot(residuals, kde=True)
-plt.xlabel('Residuos')
-plt.ylabel('Frecuencia')
-plt.title('Distribución de los Residuos (Modelo 5 variables)')
-plt.grid(True)
-plt.savefig('/content/plot_model_5_variables_residuals_distribution.png')
-plt.show()
-
-plt.figure(figsize=(10, 6))
-sns.scatterplot(x=y_pred, y=residuals)
-plt.axhline(y=0, color='r', linestyle='--')
-plt.xlabel('Precios Predichos')
-plt.ylabel('Residuos')
-plt.title('Residuos vs. Precios Predichos (Modelo 5 variables)')
-plt.grid(True)
-plt.savefig('/content/plot_model_5_variables_residuals_vs_predictions.png')
-plt.show()
-
-# --- Nuevo Modelo de Regresión Lineal Múltiple (3 variables) ---
-
-# Seleccionar las 3 características principales
-X_new = df_house[['Avg. Area Income', 'House Age', 'Number of Rooms']]
-y_new = df_house['Price']
-
-# Dividir los datos para el nuevo modelo
-X_train_new, X_test_new, y_train_new, y_test_new = train_test_split(X_new, y_new, test_size=0.2, random_state=42)
-
-# Construir y entrenar el nuevo modelo
-model_new = LinearRegression()
-model_new.fit(X_train_new, y_train_new)
-
-print('')
-print('--- Nuevo Modelo de Regresión Lineal Múltiple (3 variables) ---')
-print('Modelo entrenado.')
-print(f'Coeficientes del nuevo modelo: {model_new.coef_}')
-print(f'Intercepto del nuevo modelo: {model_new.intercept_}')
-
-# Evaluación y Comparación del Nuevo Modelo (3 variables)
-y_pred_new = model_new.predict(X_test_new)
-
-mse_new = mean_squared_error(y_test_new, y_pred_new)
-mae_new = mean_absolute_error(y_test_new, y_pred_new)
-r2_new = r2_score(y_test_new, y_pred_new)
-
-print('')
-print(f'Mean Squared Error (MSE): {mse_new:.2f}')
-print(f'Mean Absolute Error (MAE): {mae_new:.2f}')
-print(f'R-squared (R2): {r2_new:.2f}')
-
-print('')
-print('--- Comparación de Coeficientes ---')
-print('Modelo Original (5 variables):')
-for feature, coef in zip(X.columns, model.coef_):
-    print(f'  {feature}: {coef:.2f}')
-
-print('')
-print('Nuevo Modelo (3 variables):')
-for feature, coef in zip(X_new.columns, model_new.coef_):
-    print(f'  {feature}: {coef:.2f}')
-
-# Visualización 3D para el Modelo 2 (3 variables)
-fig = plt.figure(figsize=(12, 10))
+# 3. Preparar la visualización 3D
+fig = plt.figure(figsize=(12, 8))
 ax = fig.add_subplot(111, projection='3d')
 
-ax.scatter(X_test_new['Avg. Area Income'], X_test_new['House Age'], y_test_new, color='blue', label='Precios Reales', alpha=0.6)
-ax.scatter(X_test_new['Avg. Area Income'], X_test_new['House Age'], y_pred_new, color='red', label='Precios Predichos (Modelo 3 variables)', alpha=0.6)
+# Extraer las variables para los ejes
+x1_test = X_test['Avg. Area Income']
+x2_test = X_test['House Age']
 
-ax.set_xlabel('Ingreso Promedio del Área')
-ax.set_ylabel('Antigüedad de la Casa')
-ax.set_zlabel('Precio')
-ax.set_title('Precios Reales vs. Predichos (Modelo 3 variables) en 3D')
-ax.legend()
-plt.savefig('/content/plot_model_3_variables_3d.png')
+# A. Graficar los datos reales como puntos (Scatter plot)
+ax.scatter(x1_test, x2_test, y_test, color='teal', alpha=0.6, edgecolors='k', label='Datos reales')
+
+# B. Crear el plano de predicción (Superficie 3D)
+# Creamos una malla (grid) con los valores mínimos y máximos de nuestras 2 variables
+x1_rango = np.linspace(X_3d['Avg. Area Income'].min(), X_3d['Avg. Area Income'].max(), 10)
+x2_rango = np.linspace(X_3d['House Age'].min(), X_3d['House Age'].max(), 10)
+
+# Convertimos los rangos en coordenadas 2D para el plano
+x1_malla, x2_malla = np.meshgrid(x1_rango, x2_rango)
+
+# Aplanamos la malla para que el modelo pueda hacer las predicciones
+malla_plana = pd.DataFrame({
+    'Avg. Area Income': x1_malla.ravel(),
+    'House Age': x2_malla.ravel()
+})
+
+# Calculamos el Precio (Z) para cada punto de la malla
+z_malla = model_3d.predict(malla_plana)
+# Reconstruimos la forma de la malla para graficarla
+z_malla = z_malla.reshape(x1_malla.shape)
+
+# Graficamos el plano de regresión (las predicciones del modelo)
+ax.plot_surface(x1_malla, x2_malla, z_malla, alpha=0.4, color='orange', edgecolor='none')
+
+# 4. Etiquetas y configuración visual
+ax.set_xlabel('Avg. Area Income')
+ax.set_ylabel('House Age')
+ax.set_zlabel('Price')
+ax.set_title('Regresión Lineal Múltiple en 3D (2 Variables vs Precio)')
+
+# Ajustar el ángulo de visión (elevación, azimut)
+ax.view_init(elev=20, azim=-45)
+
+plt.tight_layout()
 plt.show()
