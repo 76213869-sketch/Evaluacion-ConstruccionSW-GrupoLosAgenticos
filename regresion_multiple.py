@@ -51,6 +51,13 @@ print('Modelo entrenado.')
 print(f'Coeficientes del modelo: {model.coef_}')
 print(f'Intercepto del modelo: {model.intercept_}')
 
+# Evaluación del Modelo 1
+y_pred = model.predict(X_test)
+
+mse = mean_squared_error(y_test, y_pred)
+mae = mean_absolute_error(y_test, y_pred)
+r2 = r2_score(y_test, y_pred)
+
 print('')
 print(f'Mean Squared Error (MSE): {mse:.2f}')
 print(f'Mean Absolute Error (MAE): {mae:.2f}')
@@ -64,6 +71,7 @@ plt.ylabel('Precios Predichos')
 plt.title('Precios Reales vs. Precios Predichos (Modelo 5 variables)')
 plt.plot([y_test.min(), y_test.max()], [y_test.min(), y_test.max()], 'r--') # Línea de referencia y=x
 plt.grid(True)
+plt.savefig('/content/plot_model_5_variables_predictions.png')
 plt.show()
 
 # Residuos del Modelo 1
@@ -75,6 +83,7 @@ plt.xlabel('Residuos')
 plt.ylabel('Frecuencia')
 plt.title('Distribución de los Residuos (Modelo 5 variables)')
 plt.grid(True)
+plt.savefig('/content/plot_model_5_variables_residuals_distribution.png')
 plt.show()
 
 plt.figure(figsize=(10, 6))
@@ -84,6 +93,7 @@ plt.xlabel('Precios Predichos')
 plt.ylabel('Residuos')
 plt.title('Residuos vs. Precios Predichos (Modelo 5 variables)')
 plt.grid(True)
+plt.savefig('/content/plot_model_5_variables_residuals_vs_predictions.png')
 plt.show()
 
 # --- Nuevo Modelo de Regresión Lineal Múltiple (3 variables) ---
@@ -104,6 +114,13 @@ print('--- Nuevo Modelo de Regresión Lineal Múltiple (3 variables) ---')
 print('Modelo entrenado.')
 print(f'Coeficientes del nuevo modelo: {model_new.coef_}')
 print(f'Intercepto del nuevo modelo: {model_new.intercept_}')
+
+# Evaluación y Comparación del Nuevo Modelo (3 variables)
+y_pred_new = model_new.predict(X_test_new)
+
+mse_new = mean_squared_error(y_test_new, y_pred_new)
+mae_new = mean_absolute_error(y_test_new, y_pred_new)
+r2_new = r2_score(y_test_new, y_pred_new)
 
 print('')
 print(f'Mean Squared Error (MSE): {mse_new:.2f}')
@@ -133,4 +150,5 @@ ax.set_ylabel('Antigüedad de la Casa')
 ax.set_zlabel('Precio')
 ax.set_title('Precios Reales vs. Predichos (Modelo 3 variables) en 3D')
 ax.legend()
+plt.savefig('/content/plot_model_3_variables_3d.png')
 plt.show()
