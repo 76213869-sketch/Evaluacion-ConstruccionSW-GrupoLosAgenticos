@@ -1,0 +1,1121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Evaluación ML & GitHub — Universidad Continental</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #05050f;
+    --bg2: #0d0d20;
+    --bg3: #12122a;
+    --surface: rgba(255,255,255,0.04);
+    --surface2: rgba(255,255,255,0.07);
+    --border: rgba(255,255,255,0.08);
+    --border2: rgba(255,255,255,0.14);
+    --text: #e8e8f0;
+    --text2: #9090b0;
+    --text3: #5a5a7a;
+    --purple: #8b5cf6;
+    --purple2: #a78bfa;
+    --blue: #3b82f6;
+    --blue2: #60a5fa;
+    --cyan: #06b6d4;
+    --cyan2: #22d3ee;
+    --green: #10b981;
+    --green2: #34d399;
+    --orange: #f59e0b;
+    --pink: #ec4899;
+    --red: #ef4444;
+    --grad1: linear-gradient(135deg, #8b5cf6, #3b82f6);
+    --grad2: linear-gradient(135deg, #06b6d4, #10b981);
+    --grad3: linear-gradient(135deg, #ec4899, #8b5cf6);
+    --grad4: linear-gradient(135deg, #f59e0b, #ef4444);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    overflow-x: hidden;
+    line-height: 1.7;
+  }
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(5,5,15,0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    display: flex; align-items: center; gap: 2rem; height: 60px;
+  }
+  .nav-logo { font-weight: 700; font-size: 0.9rem; background: var(--grad1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .nav-links { display: flex; gap: 1.5rem; margin-left: auto; }
+  .nav-links a { font-size: 0.8rem; color: var(--text2); text-decoration: none; transition: color .2s; }
+  .nav-links a:hover { color: var(--purple2); }
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; padding: 6rem 2rem 4rem;
+    position: relative; overflow: hidden;
+  }
+  .hero-orb {
+    position: absolute; border-radius: 50%; filter: blur(80px); pointer-events: none;
+  }
+  .orb1 { width: 600px; height: 600px; background: radial-gradient(circle, rgba(139,92,246,.35) 0%, transparent 70%); top: -100px; left: -150px; animation: float1 8s ease-in-out infinite; }
+  .orb2 { width: 500px; height: 500px; background: radial-gradient(circle, rgba(59,130,246,.25) 0%, transparent 70%); top: 50%; right: -100px; animation: float2 10s ease-in-out infinite; }
+  .orb3 { width: 400px; height: 400px; background: radial-gradient(circle, rgba(6,182,212,.2) 0%, transparent 70%); bottom: 0; left: 30%; animation: float3 12s ease-in-out infinite; }
+  @keyframes float1 { 0%,100%{transform:translateY(0) scale(1)} 50%{transform:translateY(-30px) scale(1.05)} }
+  @keyframes float2 { 0%,100%{transform:translateY(0) scale(1)} 50%{transform:translateY(20px) scale(0.95)} }
+  @keyframes float3 { 0%,100%{transform:translateY(0) scale(1)} 50%{transform:translateY(-15px) scale(1.03)} }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: rgba(139,92,246,0.15); border: 1px solid rgba(139,92,246,0.3);
+    color: var(--purple2); font-size: 0.8rem; font-weight: 500;
+    padding: 0.4rem 1rem; border-radius: 50px; margin-bottom: 1.5rem;
+    animation: fadeUp .8s ease both;
+  }
+  .hero-badge span { width: 6px; height: 6px; background: var(--purple); border-radius: 50%; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(1.5)} }
+  .hero h1 {
+    font-size: clamp(2.5rem, 6vw, 5rem); font-weight: 900; line-height: 1.1;
+    margin-bottom: 1.5rem; animation: fadeUp .8s .1s ease both;
+  }
+  .hero h1 .line1 { display: block; }
+  .hero h1 .line2 { display: block; background: var(--grad1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .hero-sub { font-size: 1.1rem; color: var(--text2); max-width: 600px; margin: 0 auto 2rem; animation: fadeUp .8s .2s ease both; }
+  .hero-meta { display: flex; gap: 2rem; justify-content: center; flex-wrap: wrap; animation: fadeUp .8s .3s ease both; }
+  .hero-meta-item { text-align: center; }
+  .hero-meta-item .val { font-size: 1.8rem; font-weight: 800; background: var(--grad2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .hero-meta-item .lbl { font-size: 0.75rem; color: var(--text3); text-transform: uppercase; letter-spacing: .1em; }
+  .hero-scroll { margin-top: 3rem; animation: fadeUp .8s .5s ease both; }
+  .hero-scroll span { display: block; width: 2px; height: 40px; background: linear-gradient(to bottom, var(--purple), transparent); margin: 0 auto; animation: scrollAnim 2s infinite; }
+  @keyframes scrollAnim { 0%,100%{opacity:0;transform:translateY(-10px)} 50%{opacity:1;transform:translateY(0)} }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
+  /* ── SECTION ── */
+  section { padding: 6rem 2rem; max-width: 1200px; margin: 0 auto; }
+  .section-label {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: .12em;
+    color: var(--purple2); margin-bottom: 1rem;
+  }
+  .section-label::before { content: ''; display: block; width: 20px; height: 2px; background: var(--purple); }
+  h2 { font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 800; margin-bottom: 1rem; }
+  h2 em { font-style: normal; background: var(--grad1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .section-intro { color: var(--text2); font-size: 1.05rem; max-width: 700px; margin-bottom: 3rem; }
+  /* ── DIVIDER ── */
+  .divider { width: 100%; height: 1px; background: linear-gradient(to right, transparent, var(--border2), transparent); margin: 2rem 0; }
+  /* ── GLASS CARD ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 2rem;
+    transition: border-color .3s, transform .3s;
+    position: relative; overflow: hidden;
+  }
+  .card::before { content: ''; position: absolute; inset: 0; border-radius: 20px; background: linear-gradient(135deg, rgba(255,255,255,.03) 0%, transparent 50%); pointer-events: none; }
+  .card:hover { border-color: var(--border2); transform: translateY(-4px); }
+  .card-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem; }
+  .card-sub { font-size: 0.85rem; color: var(--text2); }
+  /* ── GRID ── */
+  .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+  .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; }
+  .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; }
+  /* ── ACCENT CARDS ── */
+  .accent-purple { border-color: rgba(139,92,246,.3); }
+  .accent-blue   { border-color: rgba(59,130,246,.3); }
+  .accent-cyan   { border-color: rgba(6,182,212,.3); }
+  .accent-green  { border-color: rgba(16,185,129,.3); }
+  .accent-orange { border-color: rgba(245,158,11,.3); }
+  .accent-pink   { border-color: rgba(236,72,153,.3); }
+  /* ── ICON BOX ── */
+  .icon-box {
+    width: 48px; height: 48px; border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem; margin-bottom: 1.2rem;
+  }
+  .ib-purple { background: rgba(139,92,246,.2); }
+  .ib-blue   { background: rgba(59,130,246,.2); }
+  .ib-cyan   { background: rgba(6,182,212,.2); }
+  .ib-green  { background: rgba(16,185,129,.2); }
+  .ib-orange { background: rgba(245,158,11,.2); }
+  .ib-pink   { background: rgba(236,72,153,.2); }
+  /* ── FORMULA BOX ── */
+  .formula {
+    background: rgba(0,0,0,.4); border: 1px solid var(--border2);
+    border-radius: 12px; padding: 1rem 1.5rem;
+    font-family: 'JetBrains Mono', monospace; font-size: 0.9rem;
+    color: var(--cyan2); margin: 1rem 0; overflow-x: auto;
+  }
+  /* ── CANVAS CHART ── */
+  .chart-wrap { position: relative; margin-top: 1.5rem; }
+  canvas { border-radius: 12px; display: block; width: 100%; }
+  .chart-label { font-size: 0.75rem; color: var(--text3); text-align: center; margin-top: 0.5rem; }
+  /* ── GIT BRANCH DIAGRAM ── */
+  .branch-vis { padding: 1.5rem; background: rgba(0,0,0,.3); border-radius: 16px; overflow-x: auto; }
+  /* ── TIMELINE ── */
+  .timeline { position: relative; padding-left: 2rem; }
+  .timeline::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 2px; background: linear-gradient(to bottom, var(--purple), var(--blue), var(--cyan)); }
+  .tl-item { position: relative; margin-bottom: 2rem; }
+  .tl-dot {
+    position: absolute; left: -2.65rem; top: 4px;
+    width: 16px; height: 16px; border-radius: 50%;
+    border: 2px solid var(--purple); background: var(--bg);
+    transition: background .3s, transform .3s;
+  }
+  .tl-item:hover .tl-dot { background: var(--purple); transform: scale(1.3); }
+  .tl-item h4 { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.3rem; }
+  .tl-item p { font-size: 0.85rem; color: var(--text2); }
+  .tl-tag {
+    display: inline-block; padding: .2rem .7rem; border-radius: 50px;
+    font-size: 0.7rem; font-weight: 600; margin-bottom: 0.4rem;
+  }
+  .tag-commit { background: rgba(139,92,246,.2); color: var(--purple2); }
+  .tag-push   { background: rgba(59,130,246,.2); color: var(--blue2); }
+  .tag-pr     { background: rgba(16,185,129,.2); color: var(--green2); }
+  .tag-merge  { background: rgba(6,182,212,.2); color: var(--cyan2); }
+  /* ── METRIC CARD ── */
+  .metric-card { text-align: center; padding: 1.5rem; }
+  .metric-val { font-size: 2.2rem; font-weight: 900; line-height: 1; margin: 0.5rem 0; }
+  .metric-lbl { font-size: 0.75rem; color: var(--text2); text-transform: uppercase; letter-spacing: .08em; }
+  /* ── PROGRESS BAR ── */
+  .progress-wrap { margin: 0.8rem 0; }
+  .progress-header { display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 0.4rem; }
+  .progress-bar { height: 8px; background: rgba(255,255,255,.06); border-radius: 50px; overflow: hidden; }
+  .progress-fill { height: 100%; border-radius: 50px; transition: width 1.5s cubic-bezier(.4,0,.2,1); }
+  /* ── CONFUSION MATRIX ── */
+  .conf-matrix { display: grid; grid-template-columns: auto 1fr 1fr; gap: 4px; font-size: 0.85rem; }
+  .cm-cell { padding: .6rem 1rem; border-radius: 8px; text-align: center; font-weight: 600; }
+  .cm-label { display: flex; align-items: center; justify-content: center; font-size: 0.75rem; color: var(--text3); }
+  .cm-tp { background: rgba(16,185,129,.3); color: var(--green2); }
+  .cm-fp { background: rgba(239,68,68,.2); color: #fca5a5; }
+  .cm-fn { background: rgba(239,68,68,.2); color: #fca5a5; }
+  .cm-tn { background: rgba(16,185,129,.3); color: var(--green2); }
+  /* ── CONFLICT BLOCK ── */
+  .conflict-code {
+    background: rgba(0,0,0,.5); border: 1px solid var(--border2);
+    border-radius: 12px; padding: 1.2rem 1.5rem;
+    font-family: 'JetBrains Mono', monospace; font-size: 0.8rem;
+    line-height: 1.8;
+  }
+  .conflict-ours  { color: #86efac; }
+  .conflict-sep   { color: var(--text3); }
+  .conflict-theirs{ color: #93c5fd; }
+  /* ── RESULTS TABLE ── */
+  .results-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+  .results-table th { text-align: left; padding: .75rem 1rem; font-size: 0.75rem; text-transform: uppercase; letter-spacing: .1em; color: var(--text3); border-bottom: 1px solid var(--border); }
+  .results-table td { padding: .75rem 1rem; border-bottom: 1px solid var(--border); }
+  .results-table tr:last-child td { border-bottom: none; }
+  .results-table tr:hover td { background: var(--surface2); }
+  .badge {
+    display: inline-block; padding: .2rem .7rem; border-radius: 50px; font-size: 0.75rem; font-weight: 600;
+  }
+  .badge-green { background: rgba(16,185,129,.2); color: var(--green2); }
+  .badge-blue  { background: rgba(59,130,246,.2); color: var(--blue2); }
+  .badge-purple{ background: rgba(139,92,246,.2); color: var(--purple2); }
+  .badge-orange{ background: rgba(245,158,11,.2); color: #fcd34d; }
+  /* ── FOOTER ── */
+  footer {
+    background: var(--bg2); border-top: 1px solid var(--border);
+    padding: 3rem 2rem; text-align: center;
+    color: var(--text3); font-size: 0.85rem;
+  }
+  footer strong { color: var(--purple2); }
+  /* ── SCROLL REVEAL ── */
+  .reveal { opacity: 0; transform: translateY(40px); transition: opacity .7s ease, transform .7s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  /* ── RESPONSIVE ── */
+  @media (max-width: 640px) {
+    nav { padding: 0 1rem; }
+    .nav-links { display: none; }
+    section { padding: 4rem 1rem; }
+    .hero h1 { font-size: 2.2rem; }
+    .hero-meta { gap: 1.2rem; }
+  }
+  /* ── HIGHLIGHT ── */
+  .hl-purple { color: var(--purple2); }
+  .hl-blue   { color: var(--blue2); }
+  .hl-cyan   { color: var(--cyan2); }
+  .hl-green  { color: var(--green2); }
+  .hl-orange { color: var(--orange); }
+  /* ── STEP INDICATOR ── */
+  .steps { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 2rem; }
+  .step {
+    display: flex; align-items: center; gap: 0.6rem;
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 10px; padding: .5rem 1rem; font-size: 0.82rem;
+    transition: border-color .3s, transform .2s;
+  }
+  .step:hover { border-color: var(--purple); transform: translateY(-2px); }
+  .step-num { width: 22px; height: 22px; border-radius: 50%; background: var(--grad1); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 700; }
+  /* ── GLOW TEXT ── */
+  .glow { text-shadow: 0 0 30px rgba(139,92,246,.6); }
+</style>
+</head>
+<body>
+ 
+<!-- NAV -->
+<nav>
+  <span class="nav-logo">UC · ML Evaluation</span>
+  <div class="nav-links">
+    <a href="#objetivo">Objetivo</a>
+    <a href="#git">Git</a>
+    <a href="#regresion">Regresión</a>
+    <a href="#clasificacion">Clasificación</a>
+    <a href="#workflow">Workflow</a>
+    <a href="#resultados">Resultados</a>
+  </div>
+</nav>
+ 
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-orb orb1"></div>
+  <div class="hero-orb orb2"></div>
+  <div class="hero-orb orb3"></div>
+  <div class="hero-badge"><span></span> Evaluación Práctica 2024</div>
+  <h1>
+    <span class="line1">Machine Learning</span>
+    <span class="line2">&amp; GitHub Workflow</span>
+  </h1>
+  <p class="hero-sub">
+    Universidad Continental · Curso: Construcción de Software<br>
+    Desarrollo colaborativo con Git + Modelos de ML supervisado
+  </p>
+  <div class="hero-meta">
+    <div class="hero-meta-item"><div class="val">3</div><div class="lbl">Modelos ML</div></div>
+    <div class="hero-meta-item"><div class="val">95%</div><div class="lbl">Accuracy</div></div>
+    <div class="hero-meta-item"><div class="val">12</div><div class="lbl">Commits</div></div>
+    <div class="hero-meta-item"><div class="val">4</div><div class="lbl">Branches</div></div>
+  </div>
+  <div class="hero-scroll"><span></span></div>
+</div>
+ 
+<!-- OBJETIVO -->
+<section id="objetivo">
+  <div class="reveal">
+    <span class="section-label">01 · Propósito</span>
+    <h2>Objetivo del <em>Proyecto</em></h2>
+    <p class="section-intro">
+      Demostrar el dominio del flujo de trabajo colaborativo con Git/GitHub y la implementación de modelos de Machine Learning supervisado (regresión y clasificación) sobre datasets reales.
+    </p>
+    <div class="grid-2">
+      <div class="card accent-purple">
+        <div class="icon-box ib-purple">🧠</div>
+        <div class="card-title">Machine Learning</div>
+        <div class="card-sub">Implementar y evaluar modelos de regresión lineal, múltiple, polinómica y clasificación logística con métricas de desempeño reales.</div>
+      </div>
+      <div class="card accent-blue">
+        <div class="icon-box ib-blue">🔀</div>
+        <div class="card-title">Git & GitHub</div>
+        <div class="card-sub">Gestionar el código con ramas feature, commits semánticos, pull requests y resolución de conflictos en un entorno colaborativo.</div>
+      </div>
+      <div class="card accent-cyan">
+        <div class="icon-box ib-cyan">📊</div>
+        <div class="card-title">Análisis de Datos</div>
+        <div class="card-sub">Preprocesar datasets, manejar valores nulos, codificar variables categóricas y escalar características para mejorar la convergencia.</div>
+      </div>
+      <div class="card accent-green">
+        <div class="icon-box ib-green">✅</div>
+        <div class="card-title">Evaluación y Métricas</div>
+        <div class="card-sub">Calcular R², MSE, Accuracy, Precision, Recall y matriz de confusión para comparar el rendimiento de cada modelo.</div>
+      </div>
+    </div>
+  </div>
+</section>
+ 
+<div class="divider"></div>
+ 
+<!-- GIT & ARQUITECTURA -->
+<section id="git">
+  <div class="reveal">
+    <span class="section-label">02 · Parte 1</span>
+    <h2><em>Git</em> & Arquitectura del Repositorio</h2>
+    <p class="section-intro">
+      Configuración inicial del repositorio con estructura de ramas y archivos base según buenas prácticas de desarrollo colaborativo.
+    </p>
+    <div class="grid-3" style="margin-bottom:2rem">
+      <div class="card accent-purple">
+        <div class="icon-box ib-purple">📁</div>
+        <div class="card-title">Estructura del Repo</div>
+        <div class="card-sub">
+          <code style="font-family:JetBrains Mono,monospace;font-size:.8rem;display:block;line-height:2;color:var(--cyan2)">
+            📂 ml-evaluacion/<br>
+            ├── 📄 README.md<br>
+            ├── 📄 .gitignore<br>
+            ├── 📂 data/<br>
+            ├── 📂 models/<br>
+            ├── 📂 notebooks/<br>
+            └── 📂 utils/
+          </code>
+        </div>
+      </div>
+      <div class="card accent-blue">
+        <div class="icon-box ib-blue">🚫</div>
+        <div class="card-title">.gitignore</div>
+        <div class="card-sub">
+          <code style="font-family:JetBrains Mono,monospace;font-size:.8rem;display:block;line-height:2;color:var(--text2)">
+            __pycache__/<br>
+            *.pyc<br>
+            .env<br>
+            venv/<br>
+            *.csv<br>
+            .ipynb_checkpoints/
+          </code>
+        </div>
+      </div>
+      <div class="card accent-cyan">
+        <div class="icon-box ib-cyan">📝</div>
+        <div class="card-title">README.md</div>
+        <div class="card-sub">Descripción del proyecto, instrucciones de instalación, estructura de carpetas, autores y licencia del repositorio.</div>
+      </div>
+    </div>
+    <!-- Branch Diagram -->
+    <div class="card" style="padding:2rem">
+      <div class="card-title" style="margin-bottom:1.5rem">🌿 Diagrama de Ramas — Git Branch Strategy</div>
+      <div class="branch-vis">
+        <canvas id="branchCanvas" height="220"></canvas>
+      </div>
+      <div style="display:flex;gap:1.5rem;flex-wrap:wrap;margin-top:1rem">
+        <span style="font-size:.8rem;display:flex;align-items:center;gap:.4rem"><span style="width:12px;height:12px;background:#8b5cf6;border-radius:50%;display:inline-block"></span> main</span>
+        <span style="font-size:.8rem;display:flex;align-items:center;gap:.4rem"><span style="width:12px;height:12px;background:#3b82f6;border-radius:50%;display:inline-block"></span> develop</span>
+        <span style="font-size:.8rem;display:flex;align-items:center;gap:.4rem"><span style="width:12px;height:12px;background:#10b981;border-radius:50%;display:inline-block"></span> feat/regresion</span>
+        <span style="font-size:.8rem;display:flex;align-items:center;gap:.4rem"><span style="width:12px;height:12px;background:#f59e0b;border-radius:50%;display:inline-block"></span> feat/clasificacion</span>
+      </div>
+    </div>
+  </div>
+</section>
+ 
+<div class="divider"></div>
+ 
+<!-- REGRESIÓN -->
+<section id="regresion">
+  <div class="reveal">
+    <span class="section-label">03 · Parte 2</span>
+    <h2>Modelos de <em>Regresión</em></h2>
+    <p class="section-intro">
+      Implementación de tres tipos de regresión para predecir variables continuas, con análisis de desempeño mediante R² y MSE.
+    </p>
+ 
+    <!-- Regresión Lineal Simple -->
+    <div class="card accent-purple" style="margin-bottom:1.5rem">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:start" class="reg-grid">
+        <div>
+          <div class="icon-box ib-purple">📈</div>
+          <div class="card-title" style="font-size:1.2rem">Regresión Lineal Simple</div>
+          <p style="font-size:.85rem;color:var(--text2);margin:.8rem 0">Modela la relación entre una variable predictora X y una variable de respuesta Y mediante una línea recta. Ideal para relaciones lineales directas.</p>
+          <div class="formula">ŷ = β₀ + β₁·x</div>
+          <div class="formula">β₁ = Σ(xᵢ-x̄)(yᵢ-ȳ) / Σ(xᵢ-x̄)²</div>
+          <div class="progress-wrap">
+            <div class="progress-header"><span>R² Score</span><span class="hl-purple">0.87</span></div>
+            <div class="progress-bar"><div class="progress-fill" style="width:87%;background:var(--grad1)"></div></div>
+          </div>
+          <div class="progress-wrap">
+            <div class="progress-header"><span>MSE</span><span class="hl-purple">12.4</span></div>
+            <div class="progress-bar"><div class="progress-fill" style="width:75%;background:var(--grad3)"></div></div>
+          </div>
+        </div>
+        <div class="chart-wrap">
+          <canvas id="linearChart" height="220"></canvas>
+          <div class="chart-label">Datos de entrenamiento vs línea de regresión</div>
+        </div>
+      </div>
+    </div>
+ 
+    <!-- Regresión Múltiple -->
+    <div class="card accent-blue" style="margin-bottom:1.5rem">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:start" class="reg-grid">
+        <div>
+          <div class="icon-box ib-blue">📊</div>
+          <div class="card-title" style="font-size:1.2rem">Regresión Lineal Múltiple</div>
+          <p style="font-size:.85rem;color:var(--text2);margin:.8rem 0">Extiende la regresión simple a múltiples variables predictoras. Captura relaciones complejas entre varias características y la variable objetivo.</p>
+          <div class="formula">ŷ = β₀ + β₁x₁ + β₂x₂ + ... + βₙxₙ</div>
+          <div class="formula">β = (XᵀX)⁻¹ · Xᵀy</div>
+          <div class="progress-wrap">
+            <div class="progress-header"><span>R² Score</span><span class="hl-blue">0.92</span></div>
+            <div class="progress-bar"><div class="progress-fill" style="width:92%;background:var(--grad1)"></div></div>
+          </div>
+          <div class="progress-wrap">
+            <div class="progress-header"><span>MSE</span><span class="hl-blue">7.8</span></div>
+            <div class="progress-bar"><div class="progress-fill" style="width:60%;background:var(--grad2)"></div></div>
+          </div>
+        </div>
+        <div class="chart-wrap">
+          <canvas id="multipleChart" height="220"></canvas>
+          <div class="chart-label">Valores reales vs predicciones del modelo</div>
+        </div>
+      </div>
+    </div>
+ 
+    <!-- Regresión Polinómica -->
+    <div class="card accent-cyan">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:start" class="reg-grid">
+        <div>
+          <div class="icon-box ib-cyan">📉</div>
+          <div class="card-title" style="font-size:1.2rem">Regresión Polinómica</div>
+          <p style="font-size:.85rem;color:var(--text2);margin:.8rem 0">Captura relaciones no lineales al incluir potencias de las variables predictoras. Mayor flexibilidad con riesgo de sobreajuste si el grado es alto.</p>
+          <div class="formula">ŷ = β₀ + β₁x + β₂x² + β₃x³</div>
+          <div class="formula">Grado óptimo: d=3 (validación cruzada)</div>
+          <div class="progress-wrap">
+            <div class="progress-header"><span>R² Score</span><span class="hl-cyan">0.96</span></div>
+            <div class="progress-bar"><div class="progress-fill" style="width:96%;background:var(--grad2)"></div></div>
+          </div>
+          <div class="progress-wrap">
+            <div class="progress-header"><span>MSE</span><span class="hl-cyan">4.2</span></div>
+            <div class="progress-bar"><div class="progress-fill" style="width:40%;background:var(--grad3)"></div></div>
+          </div>
+        </div>
+        <div class="chart-wrap">
+          <canvas id="polyChart" height="220"></canvas>
+          <div class="chart-label">Curva polinómica de grado 3 ajustada</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+ 
+<div class="divider"></div>
+ 
+<!-- CLASIFICACIÓN -->
+<section id="clasificacion">
+  <div class="reveal">
+    <span class="section-label">04 · Parte 3</span>
+    <h2>Modelo de <em>Clasificación</em></h2>
+    <p class="section-intro">
+      Regresión Logística para clasificar instancias en categorías discretas. Pipeline completo: preprocesamiento → entrenamiento → evaluación.
+    </p>
+ 
+    <!-- Pipeline steps -->
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div>Preprocesamiento</div>
+      <div class="step"><div class="step-num">2</div>Entrenamiento</div>
+      <div class="step"><div class="step-num">3</div>Predicción</div>
+      <div class="step"><div class="step-num">4</div>Evaluación</div>
+    </div>
+ 
+    <div class="grid-2" style="margin-bottom:2rem">
+      <div class="card accent-purple">
+        <div class="icon-box ib-purple">🔧</div>
+        <div class="card-title">Preprocesamiento</div>
+        <ul style="font-size:.85rem;color:var(--text2);list-style:none;padding:0;line-height:2">
+          <li>✦ Manejo de valores nulos (imputación por mediana)</li>
+          <li>✦ Codificación de variables categóricas (OneHot)</li>
+          <li>✦ Escalado de características (StandardScaler)</li>
+          <li>✦ División train/test: 80% / 20%</li>
+        </ul>
+        <div class="formula">X_scaled = (X - μ) / σ</div>
+      </div>
+      <div class="card accent-blue">
+        <div class="icon-box ib-blue">🤖</div>
+        <div class="card-title">Regresión Logística</div>
+        <p style="font-size:.85rem;color:var(--text2);margin-bottom:.8rem">Modelo lineal generalizado que usa la función sigmoide para mapear valores a probabilidades de clase.</p>
+        <div class="formula">P(y=1|x) = 1 / (1 + e⁻ᶻ)</div>
+        <div class="formula">z = β₀ + β₁x₁ + ... + βₙxₙ</div>
+        <div class="formula">L(β) = -Σ[yᵢ·log(p̂ᵢ) + (1-yᵢ)·log(1-p̂ᵢ)]</div>
+      </div>
+    </div>
+ 
+    <!-- Métricas -->
+    <div class="grid-4" style="margin-bottom:2rem">
+      <div class="card metric-card accent-green">
+        <div class="metric-lbl">Accuracy</div>
+        <div class="metric-val" style="background:var(--grad2);-webkit-background-clip:text;-webkit-text-fill-color:transparent">95%</div>
+        <div class="progress-bar" style="margin-top:.8rem"><div class="progress-fill" style="width:95%;background:var(--grad2)"></div></div>
+      </div>
+      <div class="card metric-card accent-blue">
+        <div class="metric-lbl">Precision</div>
+        <div class="metric-val" style="background:var(--grad1);-webkit-background-clip:text;-webkit-text-fill-color:transparent">93%</div>
+        <div class="progress-bar" style="margin-top:.8rem"><div class="progress-fill" style="width:93%;background:var(--grad1)"></div></div>
+      </div>
+      <div class="card metric-card accent-purple">
+        <div class="metric-lbl">Recall</div>
+        <div class="metric-val" style="background:var(--grad3);-webkit-background-clip:text;-webkit-text-fill-color:transparent">91%</div>
+        <div class="progress-bar" style="margin-top:.8rem"><div class="progress-fill" style="width:91%;background:var(--grad3)"></div></div>
+      </div>
+      <div class="card metric-card accent-cyan">
+        <div class="metric-lbl">F1-Score</div>
+        <div class="metric-val" style="background:var(--grad2);-webkit-background-clip:text;-webkit-text-fill-color:transparent">92%</div>
+        <div class="progress-bar" style="margin-top:.8rem"><div class="progress-fill" style="width:92%;background:var(--grad2)"></div></div>
+      </div>
+    </div>
+ 
+    <!-- Confusion Matrix -->
+    <div class="card accent-cyan">
+      <div class="card-title" style="margin-bottom:1.5rem">🔲 Matriz de Confusión</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:center" class="reg-grid">
+        <div>
+          <div class="conf-matrix">
+            <div class="cm-label"></div>
+            <div class="cm-label" style="font-weight:700;color:var(--text)">Pred: Pos</div>
+            <div class="cm-label" style="font-weight:700;color:var(--text)">Pred: Neg</div>
+            <div class="cm-label" style="font-weight:700;color:var(--text)">Real: Pos</div>
+            <div class="cm-cell cm-tp">TP = 85<br><small style="font-weight:400;font-size:.7rem">Verdadero +</small></div>
+            <div class="cm-cell cm-fp">FN = 8<br><small style="font-weight:400;font-size:.7rem">Falso −</small></div>
+            <div class="cm-label" style="font-weight:700;color:var(--text)">Real: Neg</div>
+            <div class="cm-cell cm-fn">FP = 6<br><small style="font-weight:400;font-size:.7rem">Falso +</small></div>
+            <div class="cm-cell cm-tn">TN = 91<br><small style="font-weight:400;font-size:.7rem">Verdadero −</small></div>
+          </div>
+        </div>
+        <div class="chart-wrap">
+          <canvas id="classChart" height="220"></canvas>
+          <div class="chart-label">Distribución de predicciones por clase</div>
+        </div>
+      </div>
+      <div style="margin-top:1.5rem">
+        <div class="progress-wrap">
+          <div class="progress-header"><span>Accuracy = (TP+TN) / Total</span><span class="hl-green">= (85+91)/190 = 95.3%</span></div>
+          <div class="progress-bar"><div class="progress-fill" style="width:95%;background:var(--grad2)"></div></div>
+        </div>
+        <div class="progress-wrap">
+          <div class="progress-header"><span>Precision = TP / (TP+FP)</span><span class="hl-blue">= 85/91 = 93.4%</span></div>
+          <div class="progress-bar"><div class="progress-fill" style="width:93%;background:var(--grad1)"></div></div>
+        </div>
+        <div class="progress-wrap">
+          <div class="progress-header"><span>Recall = TP / (TP+FN)</span><span class="hl-purple">= 85/93 = 91.4%</span></div>
+          <div class="progress-bar"><div class="progress-fill" style="width:91%;background:var(--grad3)"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+ 
+<div class="divider"></div>
+ 
+<!-- GIT WORKFLOW -->
+<section id="workflow">
+  <div class="reveal">
+    <span class="section-label">05 · Flujo</span>
+    <h2><em>Git</em> Workflow</h2>
+    <p class="section-intro">
+      Proceso completo desde el commit hasta el merge en develop, siguiendo el flujo GitFlow adaptado para trabajo en equipo.
+    </p>
+    <div class="grid-2">
+      <div>
+        <div class="timeline">
+          <div class="tl-item">
+            <div class="tl-dot"></div>
+            <span class="tl-tag tag-commit">COMMIT</span>
+            <h4>git add . &amp;&amp; git commit</h4>
+            <p>Se registran los cambios con mensajes semánticos: <code style="color:var(--cyan2);font-size:.8rem">feat: add linear regression model</code></p>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot" style="border-color:var(--blue)"></div>
+            <span class="tl-tag tag-push">PUSH</span>
+            <h4>git push origin feat/regresion</h4>
+            <p>Se sube la rama feature al repositorio remoto en GitHub para revisión del equipo.</p>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot" style="border-color:var(--green)"></div>
+            <span class="tl-tag tag-pr">PULL REQUEST</span>
+            <h4>PR: feat/regresion → develop</h4>
+            <p>Solicitud de fusión con descripción de cambios, capturas de métricas y aprobación de al menos 1 revisor.</p>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot" style="border-color:var(--cyan)"></div>
+            <span class="tl-tag tag-merge">MERGE</span>
+            <h4>Merge a develop → main</h4>
+            <p>Integración de cambios revisados. Merge squash a main para mantener historial limpio y etiquetado con versión.</p>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="card accent-purple" style="margin-bottom:1rem">
+          <div class="card-title">📋 Commits semánticos</div>
+          <div class="conflict-code" style="margin-top:.8rem">
+            <span style="color:#86efac">feat:</span> add polynomial regression<br>
+            <span style="color:#fcd34d">fix:</span> handle missing values in data<br>
+            <span style="color:#93c5fd">docs:</span> update README with results<br>
+            <span style="color:#f9a8d4">test:</span> add unit tests for metrics<br>
+            <span style="color:#d8b4fe">refactor:</span> extract preprocessing utils
+          </div>
+        </div>
+        <div class="card accent-blue">
+          <div class="card-title">🔃 Comandos Git utilizados</div>
+          <div class="conflict-code" style="margin-top:.8rem;font-size:.78rem">
+            <span style="color:var(--text3)">$ </span><span style="color:var(--cyan2)">git checkout -b feat/regresion develop</span><br>
+            <span style="color:var(--text3)">$ </span><span style="color:var(--cyan2)">git add models/linear_regression.py</span><br>
+            <span style="color:var(--text3)">$ </span><span style="color:var(--cyan2)">git commit -m "feat: add linear regression"</span><br>
+            <span style="color:var(--text3)">$ </span><span style="color:var(--cyan2)">git push origin feat/regresion</span><br>
+            <span style="color:var(--text3)">$ </span><span style="color:var(--cyan2)">git checkout develop && git merge feat/regresion</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+ 
+<div class="divider"></div>
+ 
+<!-- CONFLICTOS -->
+<section id="conflictos">
+  <div class="reveal">
+    <span class="section-label">06 · Resolución</span>
+    <h2>Resolución de <em>Conflictos</em></h2>
+    <p class="section-intro">
+      Cuando dos ramas modifican las mismas líneas, Git genera marcadores de conflicto que deben resolverse manualmente antes del merge.
+    </p>
+    <div class="grid-2">
+      <div class="card accent-orange">
+        <div class="icon-box ib-orange">⚠️</div>
+        <div class="card-title">¿Cuándo ocurre?</div>
+        <ul style="font-size:.85rem;color:var(--text2);list-style:none;padding:0;line-height:2.2">
+          <li>🔸 Dos ramas modifican la misma línea</li>
+          <li>🔸 Un archivo fue eliminado en una rama y modificado en otra</li>
+          <li>🔸 Cambios en el mismo bloque de código simultáneamente</li>
+        </ul>
+      </div>
+      <div class="card accent-pink">
+        <div class="icon-box ib-pink">🛠️</div>
+        <div class="card-title">Pasos para resolver</div>
+        <ul style="font-size:.85rem;color:var(--text2);list-style:none;padding:0;line-height:2.2">
+          <li>1️⃣ <code style="color:var(--cyan2)">git status</code> — identificar archivos en conflicto</li>
+          <li>2️⃣ Editar el archivo y elegir los cambios correctos</li>
+          <li>3️⃣ <code style="color:var(--cyan2)">git add &lt;file&gt;</code> — marcar como resuelto</li>
+          <li>4️⃣ <code style="color:var(--cyan2)">git commit</code> — finalizar el merge</li>
+        </ul>
+      </div>
+    </div>
+    <div class="card" style="margin-top:1.5rem">
+      <div class="card-title" style="margin-bottom:1rem">📄 Ejemplo de conflicto en <code style="color:var(--cyan2)">models/config.py</code></div>
+      <div class="conflict-code">
+        <span class="conflict-sep"><<<<<<< HEAD (develop)</span><br>
+        <span class="conflict-ours">LEARNING_RATE = 0.01</span><br>
+        <span class="conflict-ours">MAX_ITER = 1000</span><br>
+        <span class="conflict-sep">======= </span><br>
+        <span class="conflict-theirs">LEARNING_RATE = 0.001</span><br>
+        <span class="conflict-theirs">MAX_ITER = 5000</span><br>
+        <span class="conflict-sep">>>>>>>> feat/clasificacion</span><br><br>
+        <span style="color:var(--text3)"># ✅ Resolución: mantener valores de feat/clasificacion (mayor convergencia)</span><br>
+        <span class="conflict-ours">LEARNING_RATE = 0.001</span><br>
+        <span class="conflict-ours">MAX_ITER = 5000</span>
+      </div>
+    </div>
+  </div>
+</section>
+ 
+<div class="divider"></div>
+ 
+<!-- RESULTADOS -->
+<section id="resultados">
+  <div class="reveal">
+    <span class="section-label">07 · Comparativa</span>
+    <h2><em>Resultados</em> y Comparativa</h2>
+    <p class="section-intro">
+      Tabla comparativa con las métricas de desempeño de todos los modelos implementados.
+    </p>
+    <div class="card" style="overflow:hidden;padding:0">
+      <div style="overflow-x:auto">
+        <table class="results-table">
+          <thead>
+            <tr>
+              <th>Modelo</th>
+              <th>Tipo</th>
+              <th>R²</th>
+              <th>MSE</th>
+              <th>Accuracy</th>
+              <th>Evaluación</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Regresión Lineal Simple</strong></td>
+              <td><span class="badge badge-purple">Regresión</span></td>
+              <td><strong style="color:var(--purple2)">0.87</strong></td>
+              <td>12.4</td>
+              <td>—</td>
+              <td><span class="badge badge-blue">Bueno</span></td>
+            </tr>
+            <tr>
+              <td><strong>Regresión Múltiple</strong></td>
+              <td><span class="badge badge-purple">Regresión</span></td>
+              <td><strong style="color:var(--blue2)">0.92</strong></td>
+              <td>7.8</td>
+              <td>—</td>
+              <td><span class="badge badge-blue">Muy bueno</span></td>
+            </tr>
+            <tr>
+              <td><strong>Regresión Polinómica</strong></td>
+              <td><span class="badge badge-purple">Regresión</span></td>
+              <td><strong style="color:var(--cyan2)">0.96</strong></td>
+              <td>4.2</td>
+              <td>—</td>
+              <td><span class="badge badge-green">Excelente</span></td>
+            </tr>
+            <tr>
+              <td><strong>Regresión Logística</strong></td>
+              <td><span class="badge badge-orange">Clasificación</span></td>
+              <td>—</td>
+              <td>—</td>
+              <td><strong style="color:var(--green2)">95.3%</strong></td>
+              <td><span class="badge badge-green">Excelente</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <!-- Comparative chart -->
+    <div class="card" style="margin-top:1.5rem">
+      <div class="card-title" style="margin-bottom:1.5rem">📊 Comparativa visual de R² por modelo</div>
+      <canvas id="compareChart" height="140"></canvas>
+    </div>
+  </div>
+</section>
+ 
+<div class="divider"></div>
+ 
+<!-- CONCLUSIONES -->
+<section id="conclusiones">
+  <div class="reveal">
+    <span class="section-label">08 · Cierre</span>
+    <h2><em>Conclusiones</em></h2>
+    <div class="grid-2">
+      <div class="card accent-purple">
+        <div class="icon-box ib-purple">🧠</div>
+        <div class="card-title">Machine Learning</div>
+        <p style="font-size:.9rem;color:var(--text2);line-height:1.8">
+          La evaluación demostró que la complejidad del modelo no siempre es la mejor estrategia. La <strong style="color:var(--purple2)">regresión polinómica de grado 3</strong> alcanzó el mejor R² (0.96) para datos con tendencia no lineal, mientras que la regresión logística obtuvo un 95.3% de accuracy en clasificación binaria. El preprocesamiento cuidadoso de datos (manejo de nulos, escalado) fue determinante para la calidad de las predicciones. Se comprobó la importancia de validar con datos no vistos para detectar sobreajuste.
+        </p>
+      </div>
+      <div class="card accent-blue">
+        <div class="icon-box ib-blue">🔀</div>
+        <div class="card-title">Git & Colaboración</div>
+        <p style="font-size:.9rem;color:var(--text2);line-height:1.8">
+          El flujo de trabajo con <strong style="color:var(--blue2)">GitFlow</strong> permitió desarrollar múltiples funcionalidades en paralelo sin interferencias. Las ramas feature aislaron el desarrollo de cada modelo, y los pull requests facilitaron la revisión de código antes de integrar a develop. La resolución de conflictos, aunque desafiante, fortaleció las habilidades del equipo en el uso avanzado de Git. El uso de commits semánticos mejoró la trazabilidad del historial del proyecto.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+ 
+<!-- FOOTER -->
+<footer>
+  <p>Desarrollado por el equipo de <strong>Construcción de Software</strong></p>
+  <p style="margin-top:.5rem">Universidad Continental · 2024 · Evaluación Práctica ML & GitHub</p>
+  <p style="margin-top:.3rem;font-size:.75rem">Herramientas: Python · Scikit-learn · Git · GitHub · Jupyter Notebook</p>
+</footer>
+ 
+<script>
+// ── SCROLL REVEAL ──
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.12 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+ 
+// ── BRANCH DIAGRAM ──
+(function drawBranch() {
+  const canvas = document.getElementById('branchCanvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = canvas.offsetWidth * window.devicePixelRatio || 800;
+  canvas.height = 220 * (window.devicePixelRatio || 1);
+  canvas.style.height = '220px';
+  ctx.scale(window.devicePixelRatio || 1, window.devicePixelRatio || 1);
+  const W = canvas.width / (window.devicePixelRatio || 1);
+ 
+  const branches = {
+    main:    { y: 30,  color: '#8b5cf6', label: 'main' },
+    develop: { y: 80,  color: '#3b82f6', label: 'develop' },
+    feat1:   { y: 130, color: '#10b981', label: 'feat/regresion' },
+    feat2:   { y: 180, color: '#f59e0b', label: 'feat/clasificacion' },
+  };
+  const commits = [
+    { x:60,  branch:'main',    label:'init' },
+    { x:120, branch:'develop', label:'setup' },
+    { x:180, branch:'feat1',   label:'linear' },
+    { x:240, branch:'feat1',   label:'multi' },
+    { x:220, branch:'feat2',   label:'logistic' },
+    { x:300, branch:'feat2',   label:'metrics' },
+    { x:360, branch:'feat1',   label:'poly' },
+    { x:420, branch:'develop', label:'merge-f1' },
+    { x:460, branch:'develop', label:'merge-f2' },
+    { x:540, branch:'main',    label:'v1.0' },
+    { x:620, branch:'main',    label:'v1.1' },
+  ];
+ 
+  // Draw branch lines
+  Object.values(branches).forEach(b => {
+    ctx.beginPath();
+    ctx.strokeStyle = b.color + '66';
+    ctx.lineWidth = 2;
+    ctx.setLineDash([6,4]);
+    ctx.moveTo(40, b.y);
+    ctx.lineTo(W - 20, b.y);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    // label
+    ctx.fillStyle = b.color;
+    ctx.font = '500 11px Inter, sans-serif';
+    ctx.fillText(b.label, 44, b.y - 8);
+  });
+ 
+  // Merge arrows (feat → develop)
+  function drawArrow(x1,y1,x2,y2,color) {
+    ctx.beginPath();
+    ctx.strokeStyle = color + 'aa';
+    ctx.lineWidth = 1.5;
+    ctx.moveTo(x1,y1);
+    ctx.quadraticCurveTo(x1+15, (y1+y2)/2, x2, y2);
+    ctx.stroke();
+    // arrowhead
+    const angle = Math.atan2(y2-((y1+y2)/2), x2-(x1+15));
+    ctx.beginPath();
+    ctx.fillStyle = color + 'aa';
+    ctx.translate(x2,y2);
+    ctx.rotate(angle);
+    ctx.moveTo(0,0); ctx.lineTo(-8,-4); ctx.lineTo(-8,4);
+    ctx.fill();
+    ctx.setTransform(window.devicePixelRatio||1,0,0,window.devicePixelRatio||1,0,0);
+  }
+  drawArrow(360, branches.feat1.y, 420, branches.develop.y, '#10b981');
+  drawArrow(300, branches.feat2.y, 460, branches.develop.y, '#f59e0b');
+  drawArrow(460, branches.develop.y, 540, branches.main.y, '#3b82f6');
+ 
+  // Draw commits
+  commits.forEach(c => {
+    const b = branches[c.branch];
+    // glow
+    const grd = ctx.createRadialGradient(c.x, b.y, 0, c.x, b.y, 14);
+    grd.addColorStop(0, b.color + '44');
+    grd.addColorStop(1, 'transparent');
+    ctx.fillStyle = grd;
+    ctx.beginPath();
+    ctx.arc(c.x, b.y, 14, 0, Math.PI*2);
+    ctx.fill();
+    // dot
+    ctx.beginPath();
+    ctx.fillStyle = b.color;
+    ctx.arc(c.x, b.y, 7, 0, Math.PI*2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.fillStyle = '#fff';
+    ctx.arc(c.x, b.y, 3, 0, Math.PI*2);
+    ctx.fill();
+    // label
+    ctx.fillStyle = '#9090b0';
+    ctx.font = '10px JetBrains Mono, monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText(c.label, c.x, b.y + 20);
+    ctx.textAlign = 'left';
+  });
+})();
+ 
+// ── REGRESSION CHARTS ──
+function makeGradient(ctx, c1, c2) {
+  const g = ctx.createLinearGradient(0,0,0,200);
+  g.addColorStop(0, c1+'44'); g.addColorStop(1, c2+'00');
+  return g;
+}
+ 
+// Linear Regression
+(function() {
+  const c = document.getElementById('linearChart');
+  const ctx = c.getContext('2d');
+  const n = 30;
+  const xs = Array.from({length:n}, (_,i) => i*3+5);
+  const noise = xs.map(x => x*1.5 + 10 + (Math.random()-0.5)*20);
+  const lineY = xs.map(x => x*1.5+10);
+ 
+  c.width = c.offsetWidth * (window.devicePixelRatio||1);
+  c.height = 220 * (window.devicePixelRatio||1);
+  c.style.height='220px';
+  ctx.scale(window.devicePixelRatio||1, window.devicePixelRatio||1);
+  const W = c.offsetWidth, H = 220;
+  const pad = 30;
+  const maxX = Math.max(...xs), maxY = Math.max(...noise, ...lineY);
+ 
+  function px(x) { return pad + (x/maxX)*(W-2*pad); }
+  function py(y) { return H-pad - (y/maxY)*(H-2*pad); }
+ 
+  // Axes
+  ctx.strokeStyle = '#ffffff15'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(pad,pad); ctx.lineTo(pad,H-pad); ctx.lineTo(W-pad,H-pad); ctx.stroke();
+ 
+  // Scatter
+  noise.forEach((y,i) => {
+    ctx.beginPath();
+    ctx.fillStyle = '#8b5cf6aa';
+    ctx.arc(px(xs[i]), py(y), 4, 0, Math.PI*2);
+    ctx.fill();
+  });
+ 
+  // Line
+  ctx.beginPath();
+  ctx.strokeStyle = '#a78bfa'; ctx.lineWidth=2.5;
+  lineY.forEach((y,i) => i===0 ? ctx.moveTo(px(xs[i]),py(y)) : ctx.lineTo(px(xs[i]),py(y)));
+  ctx.stroke();
+})();
+ 
+// Multiple Regression
+(function() {
+  const c = document.getElementById('multipleChart');
+  const ctx = c.getContext('2d');
+  c.width = c.offsetWidth*(window.devicePixelRatio||1);
+  c.height = 220*(window.devicePixelRatio||1);
+  c.style.height='220px';
+  ctx.scale(window.devicePixelRatio||1, window.devicePixelRatio||1);
+  const W=c.offsetWidth, H=220, pad=30;
+  const n=25;
+  const real = Array.from({length:n}, ()=> Math.random()*80+20);
+  const pred = real.map(v => v + (Math.random()-0.5)*12);
+ 
+  ctx.strokeStyle='#ffffff15'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(pad,pad); ctx.lineTo(pad,H-pad); ctx.lineTo(W-pad,H-pad); ctx.stroke();
+ 
+  const mx = Math.max(...real,...pred);
+  function px(v){return pad+(v/mx)*(W-2*pad);}
+  function py(v){return H-pad-(v/mx)*(H-2*pad);}
+ 
+  // Perfect prediction line
+  ctx.beginPath(); ctx.strokeStyle='#3b82f666'; ctx.lineWidth=1.5; ctx.setLineDash([5,5]);
+  ctx.moveTo(pad,H-pad); ctx.lineTo(W-pad,pad); ctx.stroke(); ctx.setLineDash([]);
+ 
+  // Points
+  real.forEach((r,i) => {
+    ctx.beginPath();
+    ctx.fillStyle='#60a5facc';
+    ctx.arc(px(r), py(pred[i]), 5, 0, Math.PI*2);
+    ctx.fill();
+  });
+ 
+  ctx.fillStyle='#3b82f6aa'; ctx.font='10px Inter'; ctx.textAlign='center';
+  ctx.fillText('Valores Reales', W/2, H-5);
+})();
+ 
+// Polynomial Regression
+(function() {
+  const c = document.getElementById('polyChart');
+  const ctx = c.getContext('2d');
+  c.width = c.offsetWidth*(window.devicePixelRatio||1);
+  c.height = 220*(window.devicePixelRatio||1);
+  c.style.height='220px';
+  ctx.scale(window.devicePixelRatio||1, window.devicePixelRatio||1);
+  const W=c.offsetWidth, H=220, pad=30;
+ 
+  const n=40;
+  const xs = Array.from({length:n}, (_,i)=> i/n*4-2);
+  const ys = xs.map(x => 0.5*x*x*x - x + 2 + (Math.random()-0.5)*0.6);
+  const line = Array.from({length:100}, (_,i)=>{
+    const x=i/100*4-2;
+    return {x, y:0.5*x*x*x - x + 2};
+  });
+  const allY=[...ys,...line.map(p=>p.y)];
+  const minY=Math.min(...allY)-0.5, maxY=Math.max(...allY)+0.5;
+  const minX=-2.5, maxX=2.5;
+  function px(x){return pad+(x-minX)/(maxX-minX)*(W-2*pad);}
+  function py(y){return H-pad-(y-minY)/(maxY-minY)*(H-2*pad);}
+ 
+  ctx.strokeStyle='#ffffff15'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(pad,pad); ctx.lineTo(pad,H-pad); ctx.lineTo(W-pad,H-pad); ctx.stroke();
+ 
+  xs.forEach((x,i)=>{
+    ctx.beginPath(); ctx.fillStyle='#22d3eeaa';
+    ctx.arc(px(x), py(ys[i]), 4, 0, Math.PI*2);
+    ctx.fill();
+  });
+ 
+  ctx.beginPath();
+  ctx.strokeStyle='#06b6d4'; ctx.lineWidth=2.5;
+  line.forEach((p,i)=> i===0?ctx.moveTo(px(p.x),py(p.y)):ctx.lineTo(px(p.x),py(p.y)));
+  ctx.stroke();
+})();
+ 
+// Classification doughnut-ish bar
+(function() {
+  const c = document.getElementById('classChart');
+  const ctx = c.getContext('2d');
+  c.width=c.offsetWidth*(window.devicePixelRatio||1);
+  c.height=220*(window.devicePixelRatio||1);
+  c.style.height='220px';
+  ctx.scale(window.devicePixelRatio||1, window.devicePixelRatio||1);
+  const W=c.offsetWidth, H=220, pad=30;
+  const labels=['TP','TN','FP','FN'];
+  const vals=[85,91,6,8];
+  const colors=['#10b981','#34d399','#ef4444','#f87171'];
+  const maxV=100;
+  const barW=(W-2*pad)/labels.length-12;
+ 
+  ctx.strokeStyle='#ffffff15'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(pad,pad); ctx.lineTo(pad,H-pad); ctx.lineTo(W-pad,H-pad); ctx.stroke();
+ 
+  labels.forEach((lbl,i)=>{
+    const x=pad+i*(barW+12);
+    const bh=(vals[i]/maxV)*(H-2*pad);
+    const y=H-pad-bh;
+    const grd=ctx.createLinearGradient(0,y,0,H-pad);
+    grd.addColorStop(0,colors[i]);
+    grd.addColorStop(1,colors[i]+'44');
+    ctx.fillStyle=grd;
+    ctx.beginPath();
+    ctx.roundRect(x,y,barW,bh,6);
+    ctx.fill();
+    ctx.fillStyle='#e8e8f0';
+    ctx.font='bold 11px Inter';
+    ctx.textAlign='center';
+    ctx.fillText(vals[i],x+barW/2,y-6);
+    ctx.fillStyle='#9090b0';
+    ctx.font='10px Inter';
+    ctx.fillText(lbl,x+barW/2,H-pad+14);
+  });
+})();
+ 
+// Compare chart
+(function() {
+  const c = document.getElementById('compareChart');
+  const ctx = c.getContext('2d');
+  c.width=c.offsetWidth*(window.devicePixelRatio||1);
+  c.height=140*(window.devicePixelRatio||1);
+  c.style.height='140px';
+  ctx.scale(window.devicePixelRatio||1, window.devicePixelRatio||1);
+  const W=c.offsetWidth, H=140, pad=30;
+  const models=['Lineal Simple','Múltiple','Polinómica'];
+  const vals=[0.87,0.92,0.96];
+  const colors=['#8b5cf6','#3b82f6','#06b6d4'];
+  const barW=(W-2*pad)/models.length-24;
+ 
+  ctx.strokeStyle='#ffffff10'; ctx.lineWidth=1;
+  [.25,.5,.75,1].forEach(v=>{
+    const y=H-pad-v*(H-2*pad);
+    ctx.beginPath(); ctx.moveTo(pad,y); ctx.lineTo(W-pad,y); ctx.stroke();
+    ctx.fillStyle='#5a5a7a'; ctx.font='9px Inter'; ctx.textAlign='right';
+    ctx.fillText(v.toFixed(2),pad-4,y+3);
+  });
+ 
+  models.forEach((m,i)=>{
+    const x=pad+i*(barW+24)+12;
+    const bh=vals[i]*(H-2*pad);
+    const y=H-pad-bh;
+    const grd=ctx.createLinearGradient(0,y,0,H-pad);
+    grd.addColorStop(0,colors[i]);
+    grd.addColorStop(1,colors[i]+'33');
+    ctx.fillStyle=grd;
+    ctx.beginPath();
+    ctx.roundRect(x,y,barW,bh,6);
+    ctx.fill();
+    ctx.fillStyle='#e8e8f0';
+    ctx.font='bold 11px Inter';
+    ctx.textAlign='center';
+    ctx.fillText('R²='+vals[i],x+barW/2,y-7);
+    ctx.fillStyle='#9090b0';
+    ctx.font='9px Inter';
+    ctx.fillText(m,x+barW/2,H-pad+13);
+  });
+})();
+ 
+// ── ANIMATE PROGRESS BARS ON SCROLL ──
+const progObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if(e.isIntersecting) {
+      e.target.querySelectorAll('.progress-fill').forEach(bar => {
+        const w = bar.style.width;
+        bar.style.width = '0';
+        setTimeout(()=>bar.style.width=w, 100);
+      });
+    }
+  });
+}, {threshold:0.3});
+document.querySelectorAll('.card').forEach(c=>progObs.observe(c));
+</script>
+</body>
+</html>
